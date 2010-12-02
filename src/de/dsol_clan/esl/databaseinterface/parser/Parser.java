@@ -21,12 +21,14 @@ import org.jdom.input.SAXBuilder;
 import de.dsol_clan.esl.databaseinterface.model.ContestantModel;
 import de.dsol_clan.esl.databaseinterface.model.LeagueModel;
 import de.dsol_clan.esl.databaseinterface.model.MatchModel;
+import de.dsol_clan.esl.databaseinterface.model.OpponentModel;
+import de.dsol_clan.esl.databaseinterface.model.SetterModel;
 
 /**
  * @author lalbrecht
  */
 public class Parser {
-
+	// TODO Create methods to clean up code.
 	public static void main (final String[] args) {
 		final Parser p = new Parser(new File(args[0]));
 		try {
@@ -71,6 +73,75 @@ public class Parser {
 	}
 
 	/**
+	 * Returns the opponent as OpponentModel.
+	 * 
+	 * @param matchNode
+	 * @return OpponentModel
+	 */
+	private OpponentModel getOpponent (final Element matchNode) {
+		Element opponentNode = null;
+		OpponentModel tempOpponent = null;
+		if ((opponentNode = matchNode.getChild("opponent")) != null) {
+			tempOpponent = (new OpponentModel(Integer.parseInt(opponentNode
+					.getAttributeValue("winner")), Integer.parseInt(opponentNode
+					.getAttributeValue("position")), Integer.parseInt(opponentNode
+					.getAttributeValue("contestant")), opponentNode.getAttributeValue("name"),
+					opponentNode.getAttributeValue("shortName"), opponentNode.getAttributeValue(
+							"challenger").charAt(0), Integer.parseInt(opponentNode
+							.getAttributeValue("setter")), Integer.parseInt(opponentNode
+							.getAttributeValue("ranking")), Float.parseFloat(opponentNode
+							.getAttributeValue("points")), opponentNode
+							.getAttributeValue("country"), Boolean.parseBoolean(opponentNode
+							.getAttributeValue("wildcard")), Boolean.parseBoolean(opponentNode
+							.getAttributeValue("defaultwin"))));
+
+		}
+		return tempOpponent;
+	}
+
+	/**
+	 * Returns the params as HashMap.
+	 * 
+	 * @param setterNode
+	 * @return HashMap<String, String>
+	 */
+	@SuppressWarnings ("unchecked")
+	private HashMap<String, String> getParams (final Element setterNode) {
+		final HashMap<String, String> paramMap = new HashMap<String, String>();
+		if (setterNode.getChildren("parameter").size() > 0) {
+			final List<Element> parameterNodes = setterNode.getChildren("parameter");
+			for (final Element parameterNode : parameterNodes) {
+				paramMap.put(parameterNode.getAttributeValue("name"), parameterNode
+						.getAttributeValue("selected"));
+			}
+		}
+		return paramMap;
+	}
+
+	/**
+	 * Returns the setter as ArraList.
+	 * 
+	 * @param matchNode
+	 * @return ArrayList<SetterModel>
+	 */
+	@SuppressWarnings ("unchecked")
+	private ArrayList<SetterModel> getSetter (final Element matchNode) {
+		final List<Element> setterNodes = matchNode.getChildren("setter");
+		final ArrayList<SetterModel> setterList = new ArrayList<SetterModel>();
+		for (final Element setterNode : setterNodes) {
+			final SetterModel tempSetter = new SetterModel(Integer.parseInt(setterNode
+					.getAttributeValue("setter")), Integer.parseInt(setterNode
+					.getAttributeValue("slot")), setterNode.getAttributeValue("contestant"));
+
+			/**
+			 * Read parameters for setter
+			 */
+			tempSetter.setParamMap(this.getParams(setterNode));
+		}
+		return setterList;
+	}
+
+	/**
 	 * @return the xmlFile
 	 */
 	public final File getXmlFile () {
@@ -90,35 +161,33 @@ public class Parser {
 	/**
 	 * Read/Parse the XML-file.
 	 * 
-	 * @return isSuccessful
 	 * @throws JDOMException
 	 * @throws IOException
 	 */
 	@SuppressWarnings ("unchecked")
-	public Boolean parseFile () throws JDOMException, IOException {
+	public void parseFile () throws JDOMException, IOException {
 		if ((this.xmlFile != null) && this.xmlFile.exists()) {
 			this.doc = this.builder.build(this.xmlFile);
 			final Element root = this.doc.getRootElement();
 			if (root != null) {
 				final List<Element> mainNodes = root.getChildren();
 				if (mainNodes.size() > 0) {
-					for (final Element node : mainNodes) {
-						final String nodeName = node.getName();
+					for (final Element mainNode : mainNodes) {
+						final String nodeName = mainNode.getName();
 						if (nodeName.equals("contestant")) {
 							/**
 							 * Create contestant.
 							 */
-							this.contestant = new ContestantModel(
-									node.getAttributeValue("country"), Integer.parseInt(node
-											.getAttributeValue("id")), node
-											.getAttributeValue("name"), node
-											.getAttributeValue("short"));
+							this.contestant = new ContestantModel(mainNode
+									.getAttributeValue("country"), Integer.parseInt(mainNode
+									.getAttributeValue("id")), mainNode.getAttributeValue("name"),
+									mainNode.getAttributeValue("short"));
 						} else if (nodeName.equals("leagues")) {
-							if (node.getChildren().size() > 0) {
+							if (mainNode.getChildren().size() > 0) {
 								/**
 								 * Add new leagues to HashMap from XML (<leagues>).
 								 */
-								final List<Element> leagueNodes = node.getChildren();
+								final List<Element> leagueNodes = mainNode.getChildren();
 								for (final Element leagueNode : leagueNodes) {
 									this.leagues.put(Integer.parseInt(leagueNode
 											.getAttributeValue("id")), new LeagueModel(Integer
@@ -169,8 +238,10 @@ public class Parser {
 								}
 							}
 						} else if (nodeName.equals("matches")) {
-							final List<Element> matchesNode = node.getChildren();
-							new MatchModel();
+							/**
+							 * Add matches if exists.
+							 */
+							final List<Element> matchesNode = mainNode.getChildren();
 							for (final Element matchNode : matchesNode) {
 								final MatchModel tempMatch = new MatchModel(
 										this.parseDateString(matchNode
@@ -201,16 +272,29 @@ public class Parser {
 												.getAttributeValue("url")), Boolean
 												.parseBoolean(matchNode
 														.getAttributeValue("wildcard")));
-								tempMatch.getCalcdateTS();
+
+								/**
+								 * add opponent if exists.
+								 */
+
+								tempMatch.setOpponent(this.getOpponent(matchNode));
+								/**
+								 * Read setter.
+								 */
+								tempMatch.setSetterList(this.getSetter(matchNode));
+
+								/**
+								 * Add match to list.
+								 */
+								this.matches.add(tempMatch);
 							}
 						}
 					}
 				}
 			}
 		}
-		// TODO debug print
+		// NOTE debug print
 		this.printLeagueNames();
-		return false;
 	}
 
 	/**

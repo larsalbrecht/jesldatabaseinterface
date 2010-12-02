@@ -4,6 +4,7 @@
 package de.dsol_clan.esl.databaseinterface.model;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * @author lalbrecht
@@ -25,9 +26,12 @@ public class MatchModel {
 	private String leagueType = null;
 	private URL leagueUrl = null;
 	private Boolean onHold = null;
+	private OpponentModel opponent = null;
 	private String result = null;
+	private ArrayList<SetterModel> setterList = null;
 	private String status = null;
 	private URL url = null;
+
 	private Boolean wildcard = null;
 
 	public MatchModel() {
@@ -189,10 +193,24 @@ public class MatchModel {
 	}
 
 	/**
+	 * @return the opponent
+	 */
+	public OpponentModel getOpponent () {
+		return this.opponent;
+	}
+
+	/**
 	 * @return the result
 	 */
 	public final String getResult () {
 		return this.result;
+	}
+
+	/**
+	 * @return the setterList
+	 */
+	public final ArrayList<SetterModel> getSetterList () {
+		return this.setterList;
 	}
 
 	/**
@@ -337,11 +355,27 @@ public class MatchModel {
 	}
 
 	/**
+	 * @param opponent
+	 *            the opponent to set
+	 */
+	public void setOpponent (final OpponentModel opponent) {
+		this.opponent = opponent;
+	}
+
+	/**
 	 * @param result
 	 *            the result to set
 	 */
 	public final void setResult (final String result) {
 		this.result = result;
+	}
+
+	/**
+	 * @param setterList
+	 *            the setterList to set
+	 */
+	public final void setSetterList (final ArrayList<SetterModel> setterList) {
+		this.setterList = setterList;
 	}
 
 	/**
