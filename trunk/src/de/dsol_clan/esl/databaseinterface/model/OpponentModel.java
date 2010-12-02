@@ -10,7 +10,7 @@ package de.dsol_clan.esl.databaseinterface.model;
 public class OpponentModel {
 	private Character challenger = null;
 	private Integer contestant = null;
-	private String countr = null;
+	private String country = null;
 	private Boolean defaultwin = null;
 	private String name = null;
 	private Float points = null;
@@ -34,13 +34,13 @@ public class OpponentModel {
 	 * @param setter
 	 * @param ranking
 	 * @param points
-	 * @param countr
+	 * @param country
 	 * @param wildcard
 	 * @param defaultwin
 	 */
 	public OpponentModel(final Integer winner, final Integer position, final Integer contestant,
 			final String name, final String shortName, final Character challenger,
-			final Integer setter, final Integer ranking, final Float points, final String countr,
+			final Integer setter, final Integer ranking, final Float points, final String country,
 			final Boolean wildcard, final Boolean defaultwin) {
 		super();
 		this.winner = winner;
@@ -52,7 +52,7 @@ public class OpponentModel {
 		this.setter = setter;
 		this.ranking = ranking;
 		this.points = points;
-		this.countr = countr;
+		this.country = country;
 		this.wildcard = wildcard;
 		this.defaultwin = defaultwin;
 	}
@@ -72,10 +72,10 @@ public class OpponentModel {
 	}
 
 	/**
-	 * @return the countr
+	 * @return the country
 	 */
-	public final String getCountr () {
-		return this.countr;
+	public final String getCountry () {
+		return this.country;
 	}
 
 	/**
@@ -159,10 +159,10 @@ public class OpponentModel {
 
 	/**
 	 * @param countr
-	 *            the countr to set
+	 *            the country to set
 	 */
-	public final void setCountr (final String countr) {
-		this.countr = countr;
+	public final void setCountry (final String country) {
+		this.country = country;
 	}
 
 	/**
