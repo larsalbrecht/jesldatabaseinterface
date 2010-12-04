@@ -100,7 +100,7 @@ public class Parser {
 	}
 
 	/**
-	 * Returns the params as HashMap.
+	 * Returns the parameters as HashMap.
 	 * 
 	 * @param setterNode
 	 * @return HashMap<String, String>
@@ -279,7 +279,7 @@ public class Parser {
 
 								tempMatch.setOpponent(this.getOpponent(matchNode));
 								/**
-								 * Read setter.
+								 * add setter if exists.
 								 */
 								tempMatch.setSetterList(this.getSetter(matchNode));
 
@@ -298,7 +298,7 @@ public class Parser {
 	}
 
 	/**
-	 * Debug method. Print all leaguenames with id.
+	 * Debug method. Print all league-names with id.
 	 */
 	public void printLeagueNames () {
 		if ((this.leagues != null) && (this.leagues.size() > 0)) {
