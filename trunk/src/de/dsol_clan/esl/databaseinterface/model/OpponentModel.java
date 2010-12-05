@@ -4,6 +4,8 @@
 package de.dsol_clan.esl.databaseinterface.model;
 
 /**
+ * This class contains the opponent model to create opponents during the parse-process.
+ * 
  * @author lalbrecht
  * 
  */
@@ -158,7 +160,7 @@ public class OpponentModel {
 	}
 
 	/**
-	 * @param countr
+	 * @param country
 	 *            the country to set
 	 */
 	public final void setCountry (final String country) {

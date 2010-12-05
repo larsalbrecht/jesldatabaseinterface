@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="JESLDatabaseInterfaceParser/bundle/bin/jesldatabaseinterfaceparser-0-8-0-1.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/JESLDatabaseInterfaceParser/bundle/jar--build-description.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" manifestLocation="/JESLDatabaseInterfaceParser/bundle/manifest" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+        <file path="/JESLDatabaseInterfaceParser/.project"/>
+        <javaElement handleIdentifier="=JESLDatabaseInterfaceParser/src"/>
+        <file path="/JESLDatabaseInterfaceParser/javadoc.xml"/>
+        <file path="/JESLDatabaseInterfaceParser/.classpath"/>
+        <folder path="/JESLDatabaseInterfaceParser/libs"/>
+    </selectedElements>
+</jardesc>

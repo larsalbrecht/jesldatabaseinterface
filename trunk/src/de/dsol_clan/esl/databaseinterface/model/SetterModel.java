@@ -6,6 +6,8 @@ package de.dsol_clan.esl.databaseinterface.model;
 import java.util.HashMap;
 
 /**
+ * This class contains the setter model to create setters during the parse-process.
+ * 
  * @author lalbrecht
  * 
  */
