@@ -25,28 +25,41 @@ import de.dsol_clan.esl.databaseinterface.model.OpponentModel;
 import de.dsol_clan.esl.databaseinterface.model.SetterModel;
 
 /**
+ * A Java parser to parse the ESL-Database-Interface XML. It can be used to handle the data in your
+ * own Java-Application, eg. a clanpage or an analysis tool.<br />
+ * <b>Notice:</b> Download the XML only once a hour. The Data will be only refreshed once a hour.<br />
+ * <br />
+ * <b>Usage: </b> <code>
+ * Parser p = new Parser(new File("/path/to/esl.xml"));
+ * p.parseFile();
+ * //Read informations
+ * ContestantModel contestant = p.getContestant();
+ * HashMap<Integer, LeagueModel> leagues = p.getLeagues();
+ * ArrayList<MatchModel> matches = p.getMatches();
+ * </code><br />
+ * To use the debug print, only set the variable "debug" to "true".
+ * 
  * @author lalbrecht
+ * @version 0.8.0.1
  */
 public class Parser {
-	// TODO Create methods to clean up code.
-	public static void main (final String[] args) {
-		final Parser p = new Parser(new File(args[0]));
-		try {
-			p.parseFile();
-		} catch (final JDOMException e) {
-			e.printStackTrace();
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-	}
 
+	/**
+	 * Private variables (getter and setter available (not all))
+	 */
 	private final SAXBuilder builder = new SAXBuilder();
 	private ContestantModel contestant = null;
+	private Boolean debug = false;
 	private Document doc = null;
 	private final HashMap<Integer, LeagueModel> leagues = new HashMap<Integer, LeagueModel>();
 	private ArrayList<MatchModel> matches = new ArrayList<MatchModel>();
 	private File xmlFile = null;
 
+	/**
+	 * Default constructor. Set "xmlFile" to a valid xml-resource.
+	 * 
+	 * @param xmlFile
+	 */
 	public Parser(final File xmlFile) {
 		this.xmlFile = xmlFile;
 	}
@@ -56,6 +69,13 @@ public class Parser {
 	 */
 	public final ContestantModel getContestant () {
 		return this.contestant;
+	}
+
+	/**
+	 * @return the debug
+	 */
+	public final Boolean getDebug () {
+		return this.debug;
 	}
 
 	/**
@@ -137,6 +157,7 @@ public class Parser {
 			 * Read parameters for setter
 			 */
 			tempSetter.setParamMap(this.getParams(setterNode));
+			setterList.add(tempSetter);
 		}
 		return setterList;
 	}
@@ -220,7 +241,10 @@ public class Parser {
 							}
 
 							/**
-							 * Add new leagues to HashMap from XML (<matches>).
+							 * Add new leagues to HashMap from XML (<matches>).<br />
+							 * This is used because the leagues will be deleted if the user get out
+							 * of them. The matches contains simple informations about the leagues,
+							 * so this informations can be "restored".
 							 */
 							final Element matchesNode = root.getChild("matches");
 							if (matchesNode.getContentSize() > 0) {
@@ -274,12 +298,12 @@ public class Parser {
 														.getAttributeValue("wildcard")));
 
 								/**
-								 * add opponent if exists.
+								 * Add opponent if exists.
 								 */
-
 								tempMatch.setOpponent(this.getOpponent(matchNode));
+
 								/**
-								 * add setter if exists.
+								 * Add setter if exists.
 								 */
 								tempMatch.setSetterList(this.getSetter(matchNode));
 
@@ -293,18 +317,61 @@ public class Parser {
 				}
 			}
 		}
-		// NOTE debug print
-		this.printLeagueNames();
+		/**
+		 * This debug print prints all information in a simple order.
+		 */
+		if (this.debug) {
+			this.printLeagueNames();
+			this.printMatches();
+		}
 	}
 
 	/**
-	 * Debug method. Print all league-names with id.
+	 * Debug method. Print all league-names with id and name.
 	 */
 	public void printLeagueNames () {
 		if ((this.leagues != null) && (this.leagues.size() > 0)) {
+			System.out.println("get Leagues: " + this.leagues.size());
 			for (final Entry<Integer, LeagueModel> league : this.leagues.entrySet()) {
 				System.out.println(league.getValue().getId() + " - " + league.getValue().getName());
 			}
+		}
+	}
+
+	/**
+	 * Debug method. Print all matches with all informations (opponent and setter with parameters)
+	 */
+	public void printMatches () {
+		if ((this.matches != null) && (this.matches.size() > 0)) {
+			for (final MatchModel match : this.matches) {
+				System.out.println("==============NEW MATCH");
+				System.out.println("MatchId: " + match.getId());
+				System.out.println("==============OPPONENT");
+				this.printOpponent(match);
+				final ArrayList<SetterModel> setter = match.getSetterList();
+				System.out.println("get Setter: " + setter.size());
+				for (final SetterModel setterModel : setter) {
+					final HashMap<String, String> params = setterModel.getParamMap();
+					System.out.println("get Params: " + params.size());
+					System.out.println("==============SETTER: " + setterModel.getSetter());
+					for (final Entry<String, String> param : params.entrySet()) {
+						System.out.println(param.getKey() + " - " + param.getValue());
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Prints the opponent information only.
+	 * 
+	 * @param match
+	 */
+	public void printOpponent (final MatchModel match) {
+		OpponentModel opponent = null;
+		if ((opponent = match.getOpponent()) != null) {
+			System.out.println("Name: " + opponent.getName());
+			System.out.println("Setter: " + opponent.getSetter());
 		}
 	}
 
@@ -314,6 +381,14 @@ public class Parser {
 	 */
 	public final void setContestant (final ContestantModel contestant) {
 		this.contestant = contestant;
+	}
+
+	/**
+	 * @param debug
+	 *            the debug to set
+	 */
+	public final void setDebug (final Boolean debug) {
+		this.debug = debug;
 	}
 
 	/**

@@ -6,6 +6,8 @@ package de.dsol_clan.esl.databaseinterface.model;
 import java.net.URL;
 
 /**
+ * This class contains the league model to create leagues during the parse-process.
+ * 
  * @author lalbrecht
  * 
  */

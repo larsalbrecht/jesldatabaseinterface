@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
+ * This class contains the match model to create matches during the parse-process.
+ * 
  * @author lalbrecht
  * 
  */

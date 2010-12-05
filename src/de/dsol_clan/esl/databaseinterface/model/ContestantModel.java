@@ -4,6 +4,8 @@
 package de.dsol_clan.esl.databaseinterface.model;
 
 /**
+ * This class contains the contestant model to create the contestant during the parse-process.
+ * 
  * @author lalbrecht
  * 
  */
@@ -17,8 +19,8 @@ public class ContestantModel {
 	public ContestantModel() {
 	}
 
-	public ContestantModel(final String country, final Integer id,
-			final String name, final String shortString) {
+	public ContestantModel(final String country, final Integer id, final String name,
+			final String shortString) {
 		super();
 		this.country = country;
 		this.id = id;
@@ -29,28 +31,28 @@ public class ContestantModel {
 	/**
 	 * @return the country
 	 */
-	public final String getCountry() {
+	public final String getCountry () {
 		return this.country;
 	}
 
 	/**
 	 * @return the id
 	 */
-	public final Integer getId() {
+	public final Integer getId () {
 		return this.id;
 	}
 
 	/**
 	 * @return the name
 	 */
-	public final String getName() {
+	public final String getName () {
 		return this.name;
 	}
 
 	/**
 	 * @return the shortString
 	 */
-	public final String getShortString() {
+	public final String getShortString () {
 		return this.shortString;
 	}
 
@@ -58,7 +60,7 @@ public class ContestantModel {
 	 * @param country
 	 *            the country to set
 	 */
-	public final void setCountry(final String country) {
+	public final void setCountry (final String country) {
 		this.country = country;
 	}
 
@@ -66,7 +68,7 @@ public class ContestantModel {
 	 * @param id
 	 *            the id to set
 	 */
-	public final void setId(final Integer id) {
+	public final void setId (final Integer id) {
 		this.id = id;
 	}
 
@@ -74,7 +76,7 @@ public class ContestantModel {
 	 * @param name
 	 *            the name to set
 	 */
-	public final void setName(final String name) {
+	public final void setName (final String name) {
 		this.name = name;
 	}
 
@@ -82,7 +84,7 @@ public class ContestantModel {
 	 * @param shortString
 	 *            the shortString to set
 	 */
-	public final void setShortString(final String shortString) {
+	public final void setShortString (final String shortString) {
 		this.shortString = shortString;
 	}
 
