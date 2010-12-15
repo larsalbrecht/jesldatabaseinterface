@@ -1,0 +1,1 @@
+  * A binary jar file with configuration to insert the changes automatically in a database
