@@ -27,6 +27,7 @@ public class MatchModel {
 	private String leagueName = null;
 	private String leagueType = null;
 	private URL leagueUrl = null;
+	private ArrayList<MapModel> mapsList = new ArrayList<MapModel>();
 	private Boolean onHold = null;
 	private OpponentModel opponent = null;
 	private String result = null;
@@ -188,6 +189,13 @@ public class MatchModel {
 	}
 
 	/**
+	 * @return the mapsList
+	 */
+	public final ArrayList<MapModel> getMapsList () {
+		return this.mapsList;
+	}
+
+	/**
 	 * @return the onHold
 	 */
 	public final Boolean getOnHold () {
@@ -346,6 +354,14 @@ public class MatchModel {
 	 */
 	public final void setLeagueUrl (final URL leagueUrl) {
 		this.leagueUrl = leagueUrl;
+	}
+
+	/**
+	 * @param mapsList
+	 *            the mapsList to set
+	 */
+	public final void setMapsList (final ArrayList<MapModel> mapsList) {
+		this.mapsList = mapsList;
 	}
 
 	/**
