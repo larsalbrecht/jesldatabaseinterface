@@ -20,6 +20,7 @@ import org.jdom.input.SAXBuilder;
 
 import de.dsol_clan.esl.databaseinterface.model.ContestantModel;
 import de.dsol_clan.esl.databaseinterface.model.LeagueModel;
+import de.dsol_clan.esl.databaseinterface.model.MapModel;
 import de.dsol_clan.esl.databaseinterface.model.MatchModel;
 import de.dsol_clan.esl.databaseinterface.model.OpponentModel;
 import de.dsol_clan.esl.databaseinterface.model.SetterModel;
@@ -43,6 +44,18 @@ import de.dsol_clan.esl.databaseinterface.model.SetterModel;
  * @version 0.8.0.1
  */
 public class Parser {
+
+	public static void main (final String[] args) {
+		final Parser p = new Parser(new File(args[0]));
+		p.setDebug(true);
+		try {
+			p.parseFile();
+		} catch (final JDOMException e) {
+			e.printStackTrace();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Private variables (getter and setter available (not all))
@@ -83,6 +96,17 @@ public class Parser {
 	 */
 	public final HashMap<Integer, LeagueModel> getLeagues () {
 		return this.leagues;
+	}
+
+	/**
+	 * Returns the maps as ArrayList.
+	 * 
+	 * @param match
+	 * @return ArrayList<MapModel>
+	 */
+	private ArrayList<MapModel> getMaps (final MatchModel match) {
+
+		return null;
 	}
 
 	/**
@@ -274,16 +298,19 @@ public class Parser {
 										this
 												.parseDateString(matchNode
 														.getAttributeValue("created")),
-										Long.parseLong(matchNode.getAttributeValue("datestamp")),
+										matchNode.getAttributeValue("datestamp").matches("\\d") ? Long
+												.parseLong(matchNode.getAttributeValue("datestamp"))
+												: 0,
 										this.parseDateString(matchNode.getAttributeValue("date")),
 										Boolean.parseBoolean(matchNode
 												.getAttributeValue("defaultwin")),
 										Boolean.parseBoolean((matchNode
 												.getAttributeValue("drawpossible") == "" ? "false"
 												: matchNode.getAttributeValue("drawpossible"))),
-										Integer
+										matchNode.getAttributeValue("firstparent").matches("\\d") ? Integer
 												.parseInt(matchNode
-														.getAttributeValue("firstparent")),
+														.getAttributeValue("firstparent"))
+												: 0,
 										matchNode.getAttributeValue("game"),
 										Integer.parseInt(matchNode.getAttributeValue("id")),
 										Integer.parseInt(matchNode.getAttributeValue("leagueid")),
@@ -306,6 +333,8 @@ public class Parser {
 								 * Add setter if exists.
 								 */
 								tempMatch.setSetterList(this.getSetter(matchNode));
+
+								tempMatch.setMapsList(this.getMaps(tempMatch));
 
 								/**
 								 * Add match to list.
@@ -339,6 +368,21 @@ public class Parser {
 	}
 
 	/**
+	 * Prints the map information only.
+	 * 
+	 * @param match
+	 */
+	public void printMaps (final MatchModel match) {
+		ArrayList<MapModel> maps = null;
+		if (((maps = match.getMapsList()) != null) && (maps.size() > 0)) {
+			for (final MapModel map : maps) {
+				System.out.println("Name: " + map.getName());
+				System.out.println("Setter: " + map.getSetterId());
+			}
+		}
+	}
+
+	/**
 	 * Debug method. Print all matches with all informations (opponent and setter with parameters)
 	 */
 	public void printMatches () {
@@ -348,6 +392,8 @@ public class Parser {
 				System.out.println("MatchId: " + match.getId());
 				System.out.println("==============OPPONENT");
 				this.printOpponent(match);
+				System.out.println("==============MAPS");
+				this.printMaps(match);
 				final ArrayList<SetterModel> setter = match.getSetterList();
 				System.out.println("get Setter: " + setter.size());
 				for (final SetterModel setterModel : setter) {
